@@ -112,6 +112,13 @@ This project is released under the MIT License.
 See the LICENSE file for full details.
 
 
+## Official repository: 
+
+https://github.com/i1zco/Secra
+
+
+
+
 ## 🔑 Keywords
 
 cybersecurity scanner
