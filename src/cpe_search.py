@@ -1,22 +1,27 @@
 import nvdlib
+from rich.progress import track
+from rich.console import Console
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import time
+from colorama import Fore, Style
 
-def search_cpe(os_name, version=None):
+async def search_cpe(search_query, version=None,max_results=100):
+    print(f"{Fore.CYAN}[*] Searching for: {search_query}{Style.RESET_ALL}")
+    if version != None:
+        query = f"{search_query}_{version}"
+    else:
+        query = search_query
 
-    if version is None:
-        search_query = f"{os_name}"
-        try:
-            cpes = nvdlib.searchCPE(keywordSearch=search_query)
-            return cpes
-        except Exception:
-             raise "Error in NVD API"
-
-    search_query = f"{os_name} {version}"
-    try:
-
-        cpes = nvdlib.searchCPE(keywordSearch=search_query)
-        time.sleep(2)
-        return cpes
-         
-    except Exception as e:
-        print(f"Error in Searching CPEs: {e}")
+    console = Console()
+    with console.status("Fetching CPEs...") :
+        loop = asyncio.get_event_loop()
+        cpes = await loop.run_in_executor(
+            None,
+            lambda: nvdlib.searchCPE(
+                keywordSearch=query,
+                limit=max_results,
+            )
+        )
+    print(f"{Fore.GREEN}[+] Found {len(cpes)} CPEs{Style.RESET_ALL}")
+    return cpes

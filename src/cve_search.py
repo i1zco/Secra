@@ -6,12 +6,11 @@ from urllib3.util.retry import Retry
 
 
 
-def search_cve(cpe_name):
+async def search_cve(cpe_name):
     try:
-        
         cves = nvdlib.searchCVE(cpeName=cpe_name) #timeout=10)
         vulnrabilitice = []
-        
+        vuln_t = []
         for vuln in cves:
             cve_id = vuln.id
             description = vuln.descriptions[0].value
@@ -37,14 +36,16 @@ def search_cve(cpe_name):
             vulnrabilitice.append({'v2score': cvss_score2})
             vulnrabilitice.sort(key=lambda x: x['v2score'] if x['v2score'] is not None else 0)
 
-            print(f"\nCVE ID: {cve_id}")
-            print(f"Descriptions: {description}")
-            print(f"Severity: {severity}")
-            print(f"CVSS_ScoreV40: {cvss_score4}")
-            print(f"CVSS_ScoreV31: {cvss_score31}")
-            print(f"CVSS_ScoreV30: {cvss_score3}")
-            print("===============================================================")
-            
+            vuln_t.append({
+
+              "CVE_ID": cve_id,
+              "Description": description,
+              "Serverity": severity,
+              "CVSS_ScoreV40": cvss_score4,
+              "CVSS_ScoreV31": cvss_score31,
+              "CVSS_ScoreV30": cvss_score3
+
+            })
+        return vuln_t
     except Exception as e:
-        print(f"Error Give vulnrability {e}")
-        return
+        return f"Error Give vulnrability {e}"
