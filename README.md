@@ -71,6 +71,8 @@ cd Secra
 pip install -r requirements.txt
 
 python secra.py
+python secra.py scan 192.168.1.1
+python secra.py search windows 10
 
 ```
 
