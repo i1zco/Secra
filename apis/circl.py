@@ -1,42 +1,62 @@
 import aiohttp
 import asyncio
 
-async def circl_api(vendor=None, product=None):
-    url = f"https://cve.circl.lu/api/search/{vendor}/{product}"
-    async with aiohttp.ClientSession() as session:
+async def fetch_page(session, vendor, product, page):
+    url = f"https://cve.circl.lu/api/search/{vendor}/{product}?page={page}"
+    try:
         async with session.get(url) as r:
-            data = await r.json()
+            if r.status == 200:
+                return await r.json()
+            else:
+                print(f"Error {r.status} on page {page}")
+                return None
+    except Exception as e:
+        print(f"Exception on page {page}: {e}")
+        return None
 
-    data2 = data.get("results", {})
+async def circl_api(vendor=None, product=None, pages=10):
     cves = []
-    keys = []
-    for key in data2.keys():
-        keys.append(key)
-    for e in keys:
-      for i in data2.get(e, {}):
-         if "cvelistv5" in keys:
-            for y in data2.get(key, {}):
-               cve = y[1]
-               id = cve.get("cveMetadata").get("cveId",{})
-               description = cve.get("containers").get("cna").get("descriptions")[0].get("value")
-               score = cve.get("containers", "N/A").get("cna", "N/A").get("metrics", "N/A")[0].get("cvssV3_1", "N/A")
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch_page(session, vendor, product, i) for i in range(pages)]
+        results = await asyncio.gather(*tasks)
 
-               cves.append({
-                    "id": id,
-                    "description": description,
-                    "score": score
-               })
-            return cves
-         try:
-                cve = i[1]
-                id = cve.get("id")
-                score = cve.get("metrics", {}).get("cvssMetricV31",[{}])[0].get("cvssData", {}).get("baseScore")
-                cves.append({
-                    "ID": id,
-                    "Score": score,
-                    "Description": cve.get('descriptions')[0].get("value")
-                })
-         except Exception:
-           return "circl_api error"
-
+        for data in results:
+            if not data:
+                continue
+            dataset = data.get("results", {})
+            for key, entries in dataset.items():
+                for item in entries:
+                    try:
+                        if key == "cvelistv5":
+                            cve = item[1]
+                            id_ = cve.get("cveMetadata", {}).get("cveId")
+                            description = cve.get("containers", {}).get("cna", {}).get("descriptions", [{}])[0].get("value")
+                            score = cve.get("containers", {}).get("cna", {}).get("metrics", [{}])[0].get("cvssV3_1", {})
+                            cves.append({
+                                "id": id_,
+                                "description": description,
+                                "score": score
+                            })
+                        elif key == "fkie_nvd":
+                            cve = item[1]
+                            id_ = cve.get("id")
+                            score = cve.get("metrics", {}).get("cvssMetricV31", [{}])[0].get("cvssData", {}).get("baseScore")
+                            description = cve.get("descriptions", [{}])[0].get("value")
+                            cves.append({
+                                "id": id_,
+                                "description": description,
+                                "score": score
+                            })
+                        elif key == "nvd":
+                            cve = item[1]
+                            id_ = cve.get("cveMetadata", {}).get("cveId")
+                            description = cve.get("containers").get("cna").get("descriptions")[0].get("value")
+                            score = cve.get("containers", "N/A").get("cna", "N/A").get("metrics", "N/A")[0].get("cvssV3_1", "N/A")
+                            cves.append({
+                                "id": id_,
+                                "description": description,
+                                "score": score
+                            })
+                    except Exception:
+                        return "error"
     return cves
