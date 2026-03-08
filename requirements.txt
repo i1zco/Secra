@@ -3,3 +3,5 @@ python-nmap
 nvdlib
 rich
 aiohttp
+aiofiles
+
