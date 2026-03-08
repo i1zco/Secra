@@ -39,19 +39,19 @@ Secra aims to provide fast and lightweight vulnerability assessment.
 
 ---
 
-## 🚀 Features
+## Features
 
-✅ CVE vulnerability detection  
-✅ Version-based security scanning  
-✅ IP-based system analysis  
-✅ Security risk severity reporting  
-✅ Fast processing engine  
-✅ Lightweight architecture  
-✅ Research-oriented cybersecurity
+- CVE vulnerability detection  
+- Version-based security scanning  
+- IP-based system analysis  
+- Security risk severity reporting  
+- Fast processing engine  
+- Lightweight architecture  
+- Research-oriented cybersecurity
 
 ---
 
-## ⚙️ System Requirements
+## System Requirements
 
 - Python 3.6 or higher  
 - Internet connection (recommended)  
@@ -60,7 +60,7 @@ Secra aims to provide fast and lightweight vulnerability assessment.
 
 ---
 
-## 📦 Installation
+## Installation
 
 ### Clone Repository
 
@@ -78,7 +78,7 @@ python secra.py search windows 10
 
 
 
-## 🧠 How Secra Works
+## How Secra Works
 
 1- Launch vulnerability scanner
 
@@ -109,7 +109,7 @@ Unauthorized scanning may violate cybersecurity laws and platform usage policies
 Always ensure legal authorization before security testing.
 
 
-## 📜 License
+## License
 This project is released under the MIT License.
 See the LICENSE file for full details.
 
@@ -121,7 +121,7 @@ https://github.com/i1zco/Secra
 
 
 
-## 🔑 Keywords
+##  Keywords
 
 cybersecurity scanner
 
