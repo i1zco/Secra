@@ -13,8 +13,7 @@ async def display_vulnerabilities(cpes):
         print(f"{Fore.CYAN}{idx}.{Style.RESET_ALL} {name}")
 
     print("=" * 60)
-
-    # نستخدم asyncio.to_thread لتشغيل input في Thread منفصل
+    
     choice = await asyncio.to_thread(input, f"{Fore.YELLOW}Select Number (0 Exit): {Style.RESET_ALL}")
 
     if not choice.isdigit():
