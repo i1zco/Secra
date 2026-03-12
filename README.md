@@ -55,7 +55,7 @@ Secra aims to provide fast and lightweight vulnerability assessment.
 ### Clone Repository
 
 ```bash
-git clone https://github.com/YourUsername/Secra.git
+git clone https://github.com/i1zco/Secra.git
 cd Secra
 
 pip install -r requirements.txt
