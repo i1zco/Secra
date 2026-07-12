@@ -24,7 +24,7 @@
 
 ---
 
-## 🌐 About Secra
+## About Secra
 
 **Secra** is a cybersecurity intelligence tool that helps detect potential vulnerabilities in software systems and networks.
 
